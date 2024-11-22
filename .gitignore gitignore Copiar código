@@ -1,0 +1,27 @@
+# Ignore WordPress core files (if you don't want to commit them)
+/wp-admin/
+/wp-includes/
+wp-config.php
+
+# Ignore uploaded content and other user-generated files
+/wp-content/uploads/
+
+
+
+# Ignore WordPress database data (persistent data for WordPress)
+/wordpress_data/
+
+# Ignore Docker-related files
+.docker-compose.override.yml
+docker-compose.override.yml
+
+
+# Ignore OS-generated files
+.DS_Store
+Thumbs.db
+
+# Ignore sensitive environment variables (this file should NOT be tracked in git)
+.env
+
+# Ignore any log files
+*.log
