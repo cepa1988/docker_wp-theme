@@ -6,7 +6,7 @@ wp-config.php
 
 # Ignore WordPress database data (persistent data for WordPress)
 /wordpress_data/
-
+/wp-content/themes/custom-theme/node_modules
 # Ignore Docker-related files
 .docker-compose.override.yml
 docker-compose.override.yml
@@ -15,9 +15,6 @@ docker-compose.override.yml
 # Ignore OS-generated files
 .DS_Store
 Thumbs.db
-
-# Ignore sensitive environment variables (this file should NOT be tracked in git)
-.env
 
 # Ignore any log files
 *.log
