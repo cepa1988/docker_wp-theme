@@ -1,0 +1,12 @@
+/*
+Theme Name: customTheme
+Theme URI: https://example.com/customTheme
+Author: Your Name
+Author URI: https://example.com
+Description: A custom WordPress theme called customTheme with SCSS support.
+Version: 1.0
+Text Domain: customTheme
+*/
+
+/* Import compiled CSS file (created by SCSS) */
+@import url('assets/css/style.css');

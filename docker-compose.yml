@@ -1,0 +1,88 @@
+networks:
+  app_network:
+    driver: bridge
+
+services:
+  wordpress:
+    networks:
+      - app_network
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wordpress-app
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
+      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
+      WORDPRESS_ENV: ${WORDPRESS_ENV}
+      WORDPRESS_SITE_URL: ${WORDPRESS_SITE_URL}
+      WORDPRESS_SITE_TITLE: ${WORDPRESS_SITE_TITLE}
+      WORDPRESS_ADMIN_USER: ${WORDPRESS_ADMIN_USER}
+      WORDPRESS_ADMIN_PASSWORD: ${WORDPRESS_ADMIN_PASSWORD}
+      WORDPRESS_ADMIN_EMAIL: ${WORDPRESS_ADMIN_EMAIL}
+    volumes:
+      - ./wp-content:/var/www/html/wp-content
+      - ./db-backups:/db-backups
+      - ./scripts:/usr/local/bin/scripts
+    entrypoint:
+      - sh
+      - -c
+      - |
+        chmod +x /usr/local/bin/scripts/entrypoint.sh && /usr/local/bin/scripts/entrypoint.sh
+    restart: always
+
+  db:
+    networks:
+      - app_network
+    image: mysql:8.0
+    container_name: wordpress-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db-init:/docker-entrypoint-initdb.d 
+      - ./db-backups:/db-backups  # Mount db-backups directory
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: ${PMA_HOST}
+      PMA_USER: ${PMA_USER}
+      PMA_PASSWORD: ${PMA_PASSWORD}
+    ports:
+      - "8081:80"
+    networks:
+      - app_network
+    restart: always
+
+  scss-builder:
+    image: node:16
+    container_name: custom-theme-builder
+    working_dir: /app
+    volumes:
+      - ./wp-content/themes/custom-theme:/app
+    command: sh -c "npm install && npm run watch"
+    depends_on:
+      - wordpress
+
+volumes:
+  db_data:
