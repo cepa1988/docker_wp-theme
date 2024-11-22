@@ -3,10 +3,6 @@
 /wp-includes/
 wp-config.php
 
-# Ignore uploaded content and other user-generated files
-/wp-content/uploads/
-
-
 
 # Ignore WordPress database data (persistent data for WordPress)
 /wordpress_data/
