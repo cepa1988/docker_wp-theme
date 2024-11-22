@@ -12,11 +12,9 @@ function customTheme() {
 add_action('after_setup_theme', 'customTheme');
 
 // Enqueue styles and scripts
-function customTheme_enqueue_assets() {
-    // Enqueue the main stylesheet
-    wp_enqueue_style('customTheme-style', get_template_directory_uri() . '/dist/style.css');
-    // Enqueue additional scripts if needed
+function custom_theme_enqueue_scripts() {
+    wp_enqueue_style('custom-theme-style', get_template_directory_uri() . '/dist/style.css', [], '1.0.0');
+    wp_enqueue_script('custom-theme-script', get_template_directory_uri() . '/dist/style.js', [], '1.0.0', true);
 }
+add_action('wp_enqueue_scripts', 'custom_theme_enqueue_scripts');
 
-add_action('wp_enqueue_scripts', 'customTheme_enqueue_assets');
-?>

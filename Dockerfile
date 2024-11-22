@@ -7,7 +7,11 @@ RUN apt-get update && apt-get install -y \
     curl \
     rsync \
     unzip \
-    default-mysql-client \ 
+    default-mysql-client \
+    npm \
+    gnupg \
+    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -30,6 +34,17 @@ COPY ./db-init /docker-entrypoint-initdb.d/
 
 # Ensure the import-db.sh script has executable permissions
 RUN chmod +x /docker-entrypoint-initdb.d/import-db.sh
+
+# Set working directory for theme development
+WORKDIR /var/www/html/wp-content/themes/custom-theme
+
+# Copy package.json and webpack files for build setup
+COPY ./wp-content/themes/custom-theme/package.json ./
+COPY ./wp-content/themes/custom-theme/webpack.config.js ./
+COPY ./wp-content/themes/custom-theme/tailwind.config.js ./
+
+# Install Node.js dependencies
+RUN npm install
 
 # Expose WordPress port
 EXPOSE 80
