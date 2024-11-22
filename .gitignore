@@ -2,11 +2,18 @@
 /wp-admin/
 /wp-includes/
 wp-config.php
+# Ignore all themes except the custom-theme
+/wp-content/themes/*
+!/wp-content/themes/custom-theme
 
+# Ignore the node_modules folder inside the custom-theme
+/wp-content/themes/custom-theme/node_modules/
+
+/wp-content/plugins/akismet
 
 # Ignore WordPress database data (persistent data for WordPress)
 /wordpress_data/
-/wp-content/themes/custom-theme/node_modules
+
 # Ignore Docker-related files
 .docker-compose.override.yml
 docker-compose.override.yml
